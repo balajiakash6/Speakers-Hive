@@ -1,0 +1,6 @@
+com\speakerhive\project2\controller\HomeController.class
+com\speakerhive\project2\model\Session.class
+com\speakerhive\project2\controller\AuthController.class
+com\speakerhive\project2\service\SessionService.class
+com\speakerhive\project2\model\Role.class
+com\speakerhive\project2\Project2Application.class

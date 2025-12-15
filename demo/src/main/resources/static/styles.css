@@ -1,0 +1,59 @@
+:root {
+    --sidebar-yellow: #ffd34d;
+    --cream-bg: #fbf4e2;
+    --card-dark: #1d1d1d;
+    --accent-gold: #f6b53a;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--cream-bg);
+    color: #222;
+}
+.app-root { min-height: 100vh; display:flex; }
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-yellow);
+    display: flex;
+    flex-direction: column;
+    border-right: 3px dashed rgba(0,0,0,0.06);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+.nav-section { padding: 18px; }
+.nav-item { padding: 12px 10px; font-weight: 700; font-size: 18px; color: #111; margin-bottom: 6px; }
+.nav-item.active { background: rgba(0,0,0,0.08); border-radius: 8px; }
+
+.profile-section { border-top: 2px dashed rgba(0,0,0,0.06); padding-top: 18px; margin: 12px; }
+.avatar { width:48px; height:48px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
+.profile-name { font-weight:800; } .profile-email { font-size:12px; color:#333; }
+.logout-btn { margin:14px; background:#111; color:var(--sidebar-yellow); padding:10px 16px; border:none; border-radius:12px; font-weight:700; }
+
+/* Content */
+.content { overflow-y:auto; flex:1; padding:24px; }
+.page-title { font-size:28px; font-weight:800; margin-bottom:6px; }
+
+/* Card */
+.card-dark { background: var(--card-dark); color:#fff; border-radius:14px; min-height:520px; box-shadow:0 18px 24px rgba(0,0,0,0.18); }
+.card-type { font-weight:800; font-size:18px; color:#fff; }
+.card-date { font-weight:900; font-size:20px; margin-top:6px; color:#fff; }
+.card-time { color:#cfcfcf; margin-bottom:10px; }
+.muted { color:#e4e4e4; margin-top:8px; font-size:14px; }
+.available-title { color:var(--accent-gold); font-weight:800; margin-top:10px; }
+
+/* roles */
+.list-roles { list-style:none; padding-left:0; margin-top:10px; }
+.role-row { display:flex; align-items:center; gap:12px; padding:8px 0; }
+.role-dot { color:var(--accent-gold); }
+.role-text { color:var(--accent-gold); font-weight:700; flex-grow:1; }
+
+/* Assign button */
+.btn-assign { background:#f2bf2a; border:none; padding:6px 14px; border-radius:14px; font-weight:700; color:#0b0b0b; }
+
+/* Assigned pill */
+.assigned-pill { background:#f2bf2a; padding:6px 14px; border-radius:20px; font-weight:700; color:#0b0b0b; white-space:nowrap; }
+
+/* Opt-out link */
+.optout-link { color:#ff6363; font-weight:700; margin-left:10px; cursor:pointer; }

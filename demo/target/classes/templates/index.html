@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Welcome, <span th:text="${userName}">User</span></h2>
+
+<div th:each="session, s : ${sessions}">
+  <h3 th:text="${session.title}"></h3>
+
+  <ul>
+    <li th:each="role, r : ${session.roles}">
+      <span th:text="${role.name}"></span>
+
+      <button th:if="${role.assignedTo == null}"
+              th:attr="onclick='assign('+${s.index}+','+${r.index}+')'">
+        Assign
+      </button>
+
+      <span th:if="${role.assignedTo != null}">
+        Assigned to <b th:text="${role.assignedTo}"></b>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<form method="post" action="/logout">
+  <button>Logout</button>
+</form>
+
+<script>
+function assign(s, r) {
+  fetch("/assign", {
+    method: "POST",
+    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+    body: `sessionIndex=${s}&roleIndex=${r}`
+  }).then(()=>location.reload());
+}
+</script>
+
+</body>
+</html>

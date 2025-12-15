@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+  <div class="app-root d-flex">
+    <aside class="sidebar d-flex flex-column p-3">
+      <div class="nav-section">
+        <div class="nav-item active">Dashboard</div>
+      </div>
+
+      <div class="flex-fill"></div>
+
+      <div class="profile-section d-flex align-items-center p-2">
+        <div class="avatar"><span th:text="${userName.substring(0,1).toUpperCase()}">U</span></div>
+        <div class="ms-2">
+          <div class="profile-name" th:text="${userName}">User</div>
+        </div>
+      </div>
+
+      <form th:action="@{/logout}" method="post" style="margin:12px;">
+        <button class="logout-btn" type="submit">Logout</button>
+      </form>
+    </aside>
+
+    <main class="content flex-grow-1 p-4">
+      <h1 class="page-title">Upcoming Sessions</h1>
+
+      <div class="cards-container mt-3">
+        <div class="row gx-4 gy-4">
+          <div class="col-md-4" th:each="session, sstat : ${sessions}">
+            <div class="card-dark p-3">
+              <div class="text-center">
+                <div class="card-type" th:text="${session.title}">Saturday Online</div>
+                <div class="card-date" th:text="${session.date}">21 Dec 2025</div>
+                <div class="card-time" th:text="${session.time}">3:00 PM - 4:00 PM</div>
+              </div>
+
+              <hr/>
+              <div class="muted">Theme: <span th:text="${session.theme}">Leadership</span></div>
+              <div class="muted">Word of the Day: <span th:text="${session.wordOfDay}">Resilience</span></div>
+              <hr/>
+
+              <div class="available-title">Available Roles</div>
+              <ul class="list-roles">
+                <li th:each="role, roleStat : ${session.roles}" class="role-row">
+                  <span class="role-dot">•</span>
+                  <span class="role-text" th:text="${role.name}">MC</span>
+
+                  <button class="btn-assign"
+                          th:if="${role.assignedTo == null}"
+                          th:attr="data-session-index=${sstat.index}"
+                          th:attrappend="data-role-index=${roleStat.index}"
+                          onclick="assignRole(this)">
+                    Assign
+                  </button>
+
+                  <span class="assigned-pill" th:if="${role.assignedTo != null}">
+                    Assigned to&nbsp;<strong th:text="${role.assignedTo}">Name</strong>
+                  </span>
+
+                  <a href="javascript:void(0);" class="optout-link"
+                     th:if="${role.assignedTo != null and role.assignedTo == userName}"
+                     th:attr="data-session-index=${sstat.index}"
+                     th:attrappend="data-role-index=${roleStat.index}"
+                     onclick="optOutRole(this)">
+                    Opt-out
+                  </a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  async function assignRole(btn) {
+    const sIndex = btn.getAttribute('data-session-index');
+    const rIndex = btn.getAttribute('data-role-index');
+    btn.disabled = true; btn.textContent = "Assigning...";
+
+    const body = new URLSearchParams();
+    body.append("sessionIndex", sIndex);
+    body.append("roleIndex", rIndex);
+
+    const res = await fetch("/assign", { method: "POST", headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
+    const json = await res.json();
+    if (!json.success) { alert(json.message || "Unable to assign"); btn.disabled=false; btn.textContent="Assign"; return; }
+
+    const li = btn.closest("li"); btn.remove();
+    const pill = document.createElement("span"); pill.className="assigned-pill";
+    pill.innerHTML = `Assigned to <strong>${escapeHtml(json.assignedTo)}</strong>`;
+    li.appendChild(pill);
+    if (json.currentUser === json.assignedTo) {
+      const opt = document.createElement("a"); opt.className="optout-link"; opt.textContent="Opt-out";
+      opt.setAttribute('data-session-index', sIndex); opt.setAttribute('data-role-index', rIndex);
+      opt.onclick = () => optOutRole(opt); li.appendChild(opt);
+    }
+  }
+
+  async function optOutRole(link) {
+    if (!confirm("Do you want to opt out?")) return;
+    const sIndex = link.getAttribute('data-session-index');
+    const rIndex = link.getAttribute('data-role-index');
+    const body = new URLSearchParams(); body.append('sessionIndex', sIndex); body.append('roleIndex', rIndex);
+    const res = await fetch("/unassign", { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
+    const json = await res.json();
+    if (!json.success) { alert(json.message||"Unable"); return; }
+    location.reload();
+  }
+
+  function escapeHtml(u){ if(!u) return ''; return u.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+</script>
+</body>
+</html>

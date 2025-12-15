@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SpeakersHive Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" th:href="@{/css/login.css}" />
+</head>
+<body>
+  <div class="header finisher-header" style="width:100%;height:100vh;position:absolute;top:0;left:0;z-index:-1"></div>
+
+  <div class="auth-wrapper">
+    <div class="card">
+      <div class="brand">
+        <div class="logo">
+          <img th:src="@{/images/mic-logo.png}" alt="logo" />
+        </div>
+        <span>Speakers<span class="accent">Hive</span></span>
+      </div>
+
+      <p class="subtitle" id="form-title">Sign In</p>
+
+      <form id="login-form" class="active" th:action="@{/login}" method="post">
+        <div class="field">
+          <label for="reg-name">Full Name</label>
+          <div class="input-wrapper">
+            <span class="icon">👤</span>
+            <input id="reg-name" name="name" type="text" placeholder="Your name" required />
+          </div>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+
+        <p class="bottom-text">
+          This demo stores the logged-in name in the HTTP session.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script th:src="@{/js/finisher-header.es5.min.js}"></script>
+  <script th:inline="javascript">
+    /* Finisher config - safe default */
+    try {
+      new FinisherHeader({
+        "count": 6, "size": {"min": 848, "max": 1187, "pulse": 0},
+        "speed": {"x": {"min":0.1,"max":0.3},"y":{"min":0.1,"max":0.3}},
+        "colors": {"background":"#9a0505","particles":["#f79101"]},
+        "blending":"overlay","opacity":{"center":1,"edge":0.1},"skew":0,"shapes":["c"]
+      });
+    } catch(e){}
+  </script>
+</body>
+</html>
