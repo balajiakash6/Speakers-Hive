@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content" x-data="{open:false}">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">Meeting Agenda</h1>
+            <p class="text-gray-400 font-medium">Auto-generated agenda</p>
+        </div>
+
+        <div class="relative w-full md:w-auto" th:if="${selected.id != -1}">
+            <button @click="open=!open" class="w-full md:w-auto bg-white text-black px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-3 hover:bg-gray-100 transition min-w-[280px] justify-between text-left">
+                <div class="flex flex-col">
+                    <span class="text-xs font-normal text-gray-500" th:text="${#temporals.format(selected.date, 'MMM dd')}"></span>
+                    <span class="leading-none" th:text="${selected.type}"></span>
+                </div>
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </button>
+            <div x-show="open" @click.outside="open=false" class="absolute right-0 mt-2 bg-white rounded-xl w-full shadow-2xl z-50 overflow-hidden py-2">
+                <a th:each="m:${meetings}" th:href="@{/agenda(mid=${m.id})}" class="block px-6 py-3 hover:bg-gray-100 text-sm text-black font-bold border-b border-gray-100 last:border-0">
+                    <span th:text="${m.type}"></span>
+                    <span class="block text-xs font-normal text-gray-500" th:text="${#temporals.format(m.date, 'MMM dd, yyyy')}"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${selected.id != -1}" class="bg-hive-card border border-white/5 rounded-3xl overflow-hidden shadow-2xl max-w-6xl mx-auto">
+        <div class="bg-black/40 p-6 md:p-8 border-b border-white/10 text-center">
+            <h2 class="text-hive-yellow font-black tracking-widest uppercase text-sm mb-2">SPEAKERS HIVE</h2>
+            <h1 class="text-2xl md:text-3xl font-bold text-white mb-2" th:text="${selected.type}"></h1>
+            <div class="text-gray-400 mb-6" th:text="${#temporals.format(selected.date, 'EEEE, dd MMMM yyyy')}"></div>
+
+            <div class="inline-flex flex-col md:flex-row gap-4 md:gap-10 bg-white/5 p-4 md:p-6 rounded-2xl border border-white/5 text-left min-w-[80%] md:min-w-[500px]">
+                <div class="flex-1">
+                    <div class="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-1">Theme</div>
+                    <div class="text-white font-bold text-lg" th:text="${selected.theme}"></div>
+                </div>
+                <div class="w-px bg-white/10 hidden md:block"></div>
+                <div class="flex-1">
+                    <div class="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-1">Word of the Day</div>
+                    <div class="text-hive-yellow font-bold text-lg" th:text="${selected.wordOfTheDay}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 text-gray-300">
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-hive-yellow font-bold text-xl mb-4 flex items-center gap-2"><span class="bg-hive-yellow/20 px-2 py-0.5 rounded text-sm">01</span> Opening</h3>
+                    <ul class="pl-4 border-l-2 border-white/10 space-y-2">
+                        <li>• Welcome by <strong class="text-white block md:inline" th:text="${assigns.getOrDefault('MC (Master of Ceremony)', 'TBA (MC)')}"></strong></li>
+                        <li>• Intro of guests</li>
+                        <li>• Word of the Day by <strong class="text-white block md:inline" th:text="${assigns.getOrDefault('Wordsmith', 'TBA (Wordsmith)')}"></strong></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-hive-yellow font-bold text-xl mb-4 flex items-center gap-2"><span class="bg-hive-yellow/20 px-2 py-0.5 rounded text-sm">02</span> Hive Talks</h3>
+                    <ul class="pl-4 border-l-2 border-white/10 space-y-4">
+                        <li class="bg-white/5 p-3 rounded-r-xl border-l-2 border-hive-yellow">
+                            <div class="font-bold text-white text-sm">Speaker 1: <span class="font-normal" th:text="${assigns.getOrDefault('Hive Talk Speaker 1', 'TBA')}"></span></div>
+                            <div class="text-xs opacity-60 mt-1">Reviewer: <span th:text="${assigns.getOrDefault('Peer Reviewer 1', 'TBA')}"></span></div>
+                        </li>
+                        <li class="bg-white/5 p-3 rounded-r-xl border-l-2 border-hive-yellow">
+                            <div class="font-bold text-white text-sm">Speaker 2: <span class="font-normal" th:text="${assigns.getOrDefault('Hive Talk Speaker 2', 'TBA')}"></span></div>
+                            <div class="text-xs opacity-60 mt-1">Reviewer: <span th:text="${assigns.getOrDefault('Peer Reviewer 2', 'TBA')}"></span></div>
+                        </li>
+                        <li class="bg-white/5 p-3 rounded-r-xl border-l-2 border-hive-yellow">
+                            <div class="font-bold text-white text-sm">Speaker 3: <span class="font-normal" th:text="${assigns.getOrDefault('Hive Talk Speaker 3', 'TBA')}"></span></div>
+                            <div class="text-xs opacity-60 mt-1">Reviewer: <span th:text="${assigns.getOrDefault('Peer Reviewer 3', 'TBA')}"></span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-hive-yellow font-bold text-xl mb-4 flex items-center gap-2"><span class="bg-hive-yellow/20 px-2 py-0.5 rounded text-sm">03</span> JAM Session</h3>
+                    <ul class="pl-4 border-l-2 border-white/10">
+                        <li>• Master: <strong class="text-white" th:text="${assigns.getOrDefault('JAM Master', 'TBA')}"></strong></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-hive-yellow font-bold text-xl mb-4 flex items-center gap-2"><span class="bg-hive-yellow/20 px-2 py-0.5 rounded text-sm">04</span> Reviews & Reports</h3>
+                    <ul class="pl-4 border-l-2 border-white/10 space-y-2">
+                        <li>• Peer Reviews</li>
+                        <li>• Timer: <strong class="text-white" th:text="${assigns.getOrDefault('Time Keeper', 'TBA')}"></strong></li>
+                        <li>• Wordsmith: <strong class="text-white" th:text="${assigns.getOrDefault('Wordsmith', 'TBA')}"></strong></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-hive-yellow font-bold text-xl mb-4 flex items-center gap-2"><span class="bg-hive-yellow/20 px-2 py-0.5 rounded text-sm">05</span> Closing</h3>
+                    <ul class="pl-4 border-l-2 border-white/10 space-y-2">
+                        <li>• Votes Counter: <strong class="text-white" th:text="${assigns.getOrDefault('Votes Counter', 'TBA')}"></strong></li>
+                        <li>• Awards & Announcements</li>
+                        <li>• Closing by MC</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
